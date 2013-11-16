@@ -1,0 +1,96 @@
+.login-left {
+	width: 28%;
+	float: left;
+	padding: 30px;
+	text-align: justify;
+	vertical-align: top;
+	height: 200px;
+}
+
+.login-center {
+	width: 28%;
+	float: left;
+	/*border-left: 1px solid #82abcc;*/
+	padding: 30px;
+	text-align: justify;
+	vertical-align: top;
+	height: 200px;
+}
+
+.login-right {
+	width: 28%;
+	float: left;
+	/*border-left: 1px solid #82abcc;*/
+	padding: 30px;
+	text-align: justify;
+	vertical-align: top;
+	height: 200px;
+}
+
+#center section, #center a.prebig, #center a.big {
+    width:1450px;
+}
+
+#SubCenter section {
+    width: 640px;
+}
+
+#HostInformations, #HostSrvList {
+    width: 850px;
+}
+
+#SubCenter {
+    margin-left: 860px;
+}
+
+#HostInformations {
+    left: 25px;
+}
+
+#HeadHostSrvList, #FooterHostSrvList {
+    width: 830px;
+}
+
+#HostSummary {
+    width: 500px;
+}
+
+#DivShowCritical, #TPie {
+    width:1480px;
+}
+
+#DivShowServices {
+    width:1428px;
+}
+
+#ServiceLst table {
+    width: 1411px;
+}
+
+#HeadDivShowCritical, #FooterDivShowCritical {
+    width: 1458px;
+}
+
+#HeadDivShowServices, #FooterDivShowServices, #HeadDivTableHostsListView, #FooterDivTableHostsListView {
+    width: 1408px;
+}
+
+#TPie td:first-child + td + td {
+    width: 700px;
+}
+
+#Comments {
+    width: 467px;
+}
+
+#HeadComments, #FooterComments {
+    width: 447px;
+}
+
+#TableComments {
+    width: 450px;
+}
+
+#SubCommentsTable {
+    width: 450px;
+}

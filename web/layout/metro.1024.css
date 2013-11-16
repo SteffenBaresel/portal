@@ -1,0 +1,67 @@
+.login-left {
+	display: none;
+}
+
+.login-center {
+	display: none;
+}
+
+.login-right {
+	display: none;
+}
+
+#center section, #center a.prebig, #center a.big {
+    width:970px;
+}
+
+#SubCenter section {
+    width: 320px;
+}
+
+#HostInformations, #HostSrvList {
+    width: 600px;
+}
+
+#SubCenter {
+    margin-left: 600px;
+}
+
+#HostInformations {
+    left: 25px;
+}
+
+#HeadHostSrvList, #FooterHostSrvList {
+    width: 580px;
+}
+
+#HostSummary {
+    display: none;
+}
+
+#DivShowCritical, #TPie {
+    width:1000px;
+}
+
+#DivShowServices {
+    width: 968px;
+}
+
+#ServiceLst table {
+    width: 951px;
+}
+
+#HeadDivShowCritical, #FooterDivShowCritical {
+    width: 978px;
+}
+
+#HeadDivShowServices, #FooterDivShowServices, #HeadDivTableHostsListView, #FooterDivTableHostsListView, #HeadDivTableServicesListView {
+    width: 948px;
+}
+
+#TPie td:first-child + td + td {
+    width: 0px;
+}
+
+#Comments, #HeadComments, #FooterComments {
+    display: none;
+}
