@@ -112,4 +112,20 @@
         <servlet-name>UserManagement</servlet-name>
         <url-pattern>/UserManagement</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserBasicsScript</servlet-name>
+        <servlet-class>de.siv.script.UserBasics</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserBasicsScript</servlet-name>
+        <url-pattern>/script/kVASySystemControl/UserBasics.js</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserBasicsStyle</servlet-name>
+        <servlet-class>de.siv.style.UserBasics</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserBasicsStyle</servlet-name>
+        <url-pattern>/layout/kVASySystemControl/UserBasics.css</url-pattern>
+    </servlet-mapping>
 </web-app>

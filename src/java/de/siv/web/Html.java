@@ -52,6 +52,7 @@ public class Html {
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCbase64.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCliveticker.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCtaov.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/UserBasics.js'></script>\n";
         }
         return replace;
     }
@@ -59,6 +60,7 @@ public class Html {
     static public String includeCss(String mod) {
         String replace = "    <link rel='stylesheet' href='layout/kSCbasic.css' />\n";
         if ("Index".equals(mod)) {
+        replace+="    <link rel='stylesheet' href='layout/kVASySystemControl/UserBasics.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCliveticker.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCsidebar.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCtaov.css' />\n";
@@ -86,10 +88,11 @@ public class Html {
         replace+="            <p class='subtitle'>Monitoring quite simple!</p>";
         replace+="        </span>\n";
         replace+="        <div id='UserMenu'><table cellpadding=0 cellspacing=0 border=0><tr><td><span class='UserDesc' style='float: left;'>User</span><span style='float: left; margin-top: -1px;' class='ui-icon ui-icon-triangle-1-s'></span></td><td width='10'></td><td colspan=3><span class='UserDesc' style='float: left;'>Session</span><span style='float: left; margin-top: -1px;' class='ui-icon ui-icon-triangle-1-s'></span></td></tr><tr valign=middle><td><p class='login_username'></p></td><td width='10'></td><td><p class='login_shortname'><a href='logout'>Abmelden</a><p></td></tr></table><div id='Liveticker'></div></div>\n";
+        replace+="        <div id='UserPicture'><img id='UserPictureP' src='layout/images/DefaultProfile.png' /></div>\n";
         return replace;
     }
     
-    static public String printSidebars(String mod) {
+    static public String printSidebar(String mod) {
         String replace = "        <div id='SidebarSmall'>\n";
         replace+="            <div id='LivetickerSidebar'></div>\n";
         replace+="        </div>\n";
@@ -101,7 +104,11 @@ public class Html {
         replace+="                <section id='SidebarSubmenu'></section>\n";
         replace+="            </div>\n";
         replace+="        </div>\n";
-        replace+="        <div id='SidebarBottomSmall'>\n";
+        return replace;
+    }
+    
+    static public String printBottombar(String mod) {
+        String replace = "        <div id='SidebarBottomSmall'>\n";
         replace+="            <div id='SlimTaov'></div>\n";
         replace+="        </div>\n";
         replace+="        <div id='SidebarBottom'>\n";

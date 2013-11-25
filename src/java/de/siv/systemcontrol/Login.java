@@ -22,7 +22,8 @@ public class Login extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter(); 
+        PrintWriter out = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "*");
         response.setContentType("text/html; charset=utf-8");

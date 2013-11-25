@@ -25,6 +25,7 @@ public class Logout extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         PrintWriter out = response.getWriter(); 
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "*");
         response.setContentType("text/html; charset=utf-8");

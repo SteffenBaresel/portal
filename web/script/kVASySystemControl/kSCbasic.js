@@ -16,6 +16,13 @@ var DeleteDomainSuffix;
 var state = urlPara('s').replace(/%3D/g,'=');
 var searchstring = urlPara('searchstring').replace(/%3D/g,'=').replace(/%20/g,' ').replace(/%22/g,'"').replace(/%25/g,'%').replace(/%3C/g,'<').replace(/%3E/g,'>').replace(/%5B/g,'[').replace(/%5C/g,'\\').replace(/%5D/g,']').replace(/%5E/g,'^').replace(/%60/g,'`').replace(/%7B/g,'{').replace(/%7C/g,'|').replace(/%7D/g,'}').replace(/%7E/g,'~').replace(/%7F/g,'').replace(/%28/g,'(').replace(/%29/g,')').replace(/%2B/g,'+');
 var suburl = window.location.pathname.split("/")[1];
+var FullName;
+var UserID;
+var UserMail;
+var UsrPctrPath;
+var UsrPctrLength;
+var UserGroups = [];
+var UserPerm = [];
 
 function GetUserConfig() {
     $.ajax({
@@ -28,14 +35,25 @@ function GetUserConfig() {
             $.each(json, function() {
                 Backend = this.LOCAL_BACKEND;
                 $.each(this.DASHBOARD, function() {
-                    $('#DashboardLinks').append('<a href="' + this.TARGET + '" class="twitter"><span>' + this.TITLE + '</span><br></br><span class="sub-grid">' + this.DESC + '</span></a>');
+                    $('#DashboardLinks').append('<a href="' + $.base64.decode( this.TARGET ) + '" class="twitter"><span>' + $.base64.decode( this.TITLE ) + '</span><br></br><span class="sub-grid">' + $.base64.decode( this.DESC ) + '</span></a>');
                 });
                 $.each(this.USER_CONFIG, function() {
                     if (this.KEY == "DeleteDomainSuffix") {
                         DeleteDomainSuffix = this.ACTION;
                     }
                 });
-                $('p.login_username').html(this.NAME);
+                $('p.login_username').html($.base64.decode( this.NAME ));
+                UserID = $.base64.decode( this.UID );
+                FullName = $.base64.decode( this.NAME );
+                UserMail = $.base64.decode( this.MAIL );
+                UsrPctrPath = $.base64.decode( this.PCTR );
+                UsrPctrLength = $.base64.decode( this.PCTRL );
+                if ( UsrPctrLength != "0" ) {
+                    $('#UserProfileConfig').attr('src',UsrPctrPath);
+                    $('#UserPictureP').attr('src',UsrPctrPath);
+                }
+                UserGroups = this.USER_GROUPS;
+                UserPerm = this.USER_PERM;
             });
         },
         error: function (xhr, thrownError) {
@@ -434,142 +452,51 @@ function SearchMiddlewareSearch(uid,content) {
     });
 }
 
-function Configuration(uid) {
-    var b64uid = $.base64.encode( uid );
-    /* Dialog format start */
-    $('#Configuration').append('<div id="ConfigurationDialog" title="Einstellungen">\n\
-        <div id="ConfigurationTabs">\n\
-            <ul>\n\
-                <li><a href="#ConfigurationTabs1">Web-Konfiguration</a></li>\n\
-                <!--li><a href="#ConfigurationTabs2">Proxy-Konfiguration</a></li>\n\
-                <li><a href="#ConfigurationTabs3">Core-Konfiguration</a></li>\n\
-                <li><a href="#ConfigurationTabs4">System-Information</a></li-->\n\
-            </ul>\n\
-            <div id="ConfigurationTabs1">\n\
-                <div id="ConfigurationSection">\n\
-                    <div id="ConfigurationSectionTitle">Dashboard</div>\n\
-                    <button id="1" class="ConfigurationSectionPoint" onclick="LoadBasic(\'' + b64uid + 'Ljd84K\');">Setze Basis Einstellungen</button>\n\
-                    <button id="2" class="ConfigurationSectionPoint" onclick="DeleteBasic(\'' + b64uid + 'Ljd84K\');">Zur&uuml;cksetzen auf Standard</button>\n\
-                </div>\n\
-                <div id="ConfigurationSection">\n\
-                    <div id="ConfigurationSectionTitle">Einstellungen</div>\n\
-                    <div class="Config"></div>\n\
-                </div>\n\
-                <div id="ConfigurationSection">\n\
-                    <div id="ConfigurationSectionTitle">Reset</div>\n\
-                    <button id="3" class="ConfigurationSectionPoint" onclick="DeleteBasicConfig(\'' + b64uid + 'Ljd84K\');">Alle Einstellungen zur&uuml;cksetzen</button>\n\
-                </div>\n\
-            </div>\n\
-            <!--div id="ConfigurationTabs2">\n\
-                <p></p>\n\
-            </div>\n\
-            <div id="ConfigurationTabs3">\n\
-                <p></p>\n\
-            </div>\n\
-            <div id="ConfigurationTabs4">\n\
-                <div id="ConfigurationSection">\n\
-                    <div id="ConfigurationSectionTitle">Modulversionen</div>\n\
-                    <div id="Modulversionen"></div>\n\
-                    <div id="ConfigurationSectionTitle">Komponenten Status</div>\n\
-                    <div id="Components"></div>\n\
-                </div>\n\
-            </div-->\n\
-       </div>\n\
-   </div>');
-    
-    $('#ConfigurationTabs').tabs();
-    $('#1').button();
-    $('#2').button();
-    $('#3').button();
-
-    /* Dialog open */
-    $('#ConfigurationDialog').dialog({
-	autoOpen: true,
-	height: 600,
-	width: 800,
-	draggable: false,
-	resizable: false,
-	modal: true,
-        open: function() {
-            /* Tabbbing of Configurationmenu */
-            $.ajax({
-                url: 'http://' + Backend + '/?mv=g',
-                crossDomain: true,
-                success: function(json) {
-                    $('#Modulversionen').append('<table id="TableModulversionen" cellpadding=0 cellspacing=5 border=0></table>');
-                    $.each(json, function(key,value) {
-                        $('table','#Modulversionen').append('<tr><td>' + key + '</td><td> >> </td><td>' + value + '</td></tr>');
-                    });
-                },
-                dataType: 'json',
-                cache: false
-            });
-            $.ajax({
-                url: 'http://' + Backend + '/chkcmp/json/?e=1&m=Q2hlY2tQcm9jZXNzLk76Zh',
-                crossDomain: true,
-                success: function(json) {
-                    $.each(json, function(key,value) {
-                        if ( key == 'ICINGA' ) {
-                            $('#Components').append('<table id="TableIcinga" cellpadding=0 cellspacing=5 border=0><tr><td colspan=2>' + key + ' Backend</td></tr></table>');
-                            $.each(value, function(index, obj) {
-                                var pstat;
-                                if ( obj.PORT_ON == 1) { pstat = "offen"; } else { pstat = "geschlossen"; }
-                                $('table#TableIcinga').append('<tr><td>' + obj.NAME + ' (' + obj.IP + '):</td><td>Aktive ICINGA Prozesse: ' + obj.ICINGA_PRC + ', Aktive XINETD Prozesse: ' + obj.XINETD_PRC + ', Port: ' + obj.PORT_NO + ' ist ' + pstat + '.</td></tr>');
-                            });
-                        } else {
-                            $('#Components').append('<table id="TablePostgre" cellpadding=0 cellspacing=5 border=0><tr><td colspan=2>' + key + ' Backend</td></tr></table>');
-                            $.each(value, function(index, obj) {
-                                var pstat;
-                                if ( obj.PORT_ON == 1) { pstat = "offen"; } else { pstat = "geschlossen"; }
-                                $('table#TablePostgre').append('<tr><td>' + obj.NAME + ' (' + obj.IP + '):</td><td>Aktive Prozesse: ' + obj.POSTGRE_PRC + ', Port: ' + obj.PORT_NO + ' ist ' + pstat + '.</td></tr>');
-                            });
-                        }
-                    });
-                },
-                dataType: 'json',
-                cache: false
-            });
-            $.ajax({
-                url: 'http://' + Backend + '/repo/json/?e=1&m=U2VsZWN0Q29uZmlnJk8Uhg&u=' + b64uid + 'KjHu8s&m2=Q29uZmlnJq0OpP',
-                crossDomain: true,
-                success: function(json) {
-                    $('div.Config').append('<table id="TableConfig" cellpadding=0 cellspacing=5 border=0></table>');
-                    $.each(json, function(key,value) {
-                        if ( value.ACTION == 0 ) {
-                            $('table#TableConfig').append('<tr><td>' + value.DESC + '</td><td></td><td><div id="radio' + value.KEY + '" class="RadioBorder"><input type="radio" id="radio1' + value.KEY + '" name="radio' + value.KEY + '" onclick="AddConfig(\'' + b64uid + 'Ljd84K\',\'Config\',\'' + value.KEY + '\',\'1\',\'' + value.DESC + '\',\'\');" /><label for="radio1' + value.KEY + '">ON</label><input type="radio" id="radio2' + value.KEY + '" name="radio' + value.KEY + '" checked="checked" onclick="AddConfig(\'' + b64uid + 'Ljd84K\',\'Config\',\'' + value.KEY + '\',\'0\',\'' + value.DESC + '\',\'\');" /><label for="radio2' + value.KEY + '">OFF</label></div></td></tr>');
-                        } else {
-                            $('table#TableConfig').append('<tr><td>' + value.DESC + '</td><td></td><td><div id="radio' + value.KEY + '" class="RadioBorder"><input type="radio" id="radio1' + value.KEY + '" name="radio' + value.KEY + '" onclick="AddConfig(\'' + b64uid + 'Ljd84K\',\'Config\',\'' + value.KEY + '\',\'1\',\'' + value.DESC + '\',\'\');" checked="checked" /><label for="radio1' + value.KEY + '">ON</label><input type="radio" id="radio2' + value.KEY + '" name="radio' + value.KEY + '" onclick="AddConfig(\'' + b64uid + 'Ljd84K\',\'Config\',\'' + value.KEY + '\',\'0\',\'' + value.DESC + '\',\'\');" /><label for="radio2' + value.KEY + '">OFF</label></div></td></tr>');
-                        }
-                        $('#radio' + value.KEY ).buttonset();
-                    });
-                },
-                dataType: 'json',
-                cache: false
-            });
-        },
-        buttons: { 
-            BEENDEN: function() {
-                $(this).dialog('close');
-		$('#ConfigurationDialog').remove();
-                location.reload();
-            }
-	}
-    });
-}
-
 function AddLink() {
-    $('#AddLink').append('<div id="AddLinkDialog" title="F&uuml;ge weiteren Men&uuml;punkt hinzu!"><p><span class="ui-icon ui-icon-circle-close" style="float: left; margin: 0 7px 50px 0;"></span>Basic:</p>');
+    $('#AddLink').html('<div id="AddLinkDialog" title="F&uuml;ge einen weiteren Link zum Dashboard hinzu!">\n\
+    <table id="AddLinkTable">\n\
+        <tr>\n\
+            <td>Titel:</td>\n\
+            <td><input type=text id="DaBTitle"/></td>\n\
+        </tr>\n\
+        <tr>\n\
+            <td>Beschreibung:</td>\n\
+            <td><input type=text id="DaBDesc"/></td>\n\
+        </tr>\n\
+        <tr>\n\
+            <td>URL Ziel:</td>\n\
+            <td><input type=text id="DaBTarget"/></td>\n\
+        </tr>\n\
+    </table>\n\
+</div>');
     $('#AddLinkDialog').dialog({
 	autoOpen: true,
-	height: 300,
+	height: 210,
 	width: 600,
 	draggable: false,
 	resizable: false,
 	modal: true,
 	buttons: { 
-            OK: function() { 
+            EINTRAGEN: function() { 
+                $.ajax({
+                    url: '/gateway/exec/AddDashboardLink?title=' + $.base64.encode( $('#DaBTitle').val() ) + '&desc=' + $.base64.encode( $('#DaBDesc').val() ) + '&target=' + $.base64.encode( $('#DaBTarget').val() ),
+                    crossDomain: true,
+                    success: function(json) {
+                        if (json.ADD == "1") {
+                            DialogMailComplete("#MailSendSuccess","Dashboard Link hinzugef&uuml;gt","Dashboard Link wurde erfolgreich hinzugef&uuml;gt.");
+                        } else {
+                            DialogMailComplete("#MailSendSuccess","+++ Fehler beim hinzuf&uuml;gen des Dashboard Links +++","<font color=red>Der Dashboard Link konnte NICHT hinzugef&uuml;gt werden.</font>");
+                        }
+                    },
+                    error: function (xhr, thrownError) {
+                        alert(xhr.status + "::" + thrownError);
+                    },
+                    dataType: 'json',
+                    cache: false
+                });
 		$(this).dialog('close');
 		$('#AddLinkDialog').remove();
+                //location.reload();
             },
             ABBRECHEN: function() {
                 $(this).dialog('close');
@@ -684,7 +611,7 @@ function MailTest() {
 \n\
 Mit freundlichen Gr&uuml;&szlig;en\n\
 \n\
-Steffen Baresel');
+' + FullName);
     $('#subject').val('[WARTUNG] ');
     $('#MailFormDialog').dialog({
 	autoOpen: true,
@@ -702,7 +629,7 @@ Steffen Baresel');
                         if (json.SEND == "1") {
                             DialogMailComplete("#MailSendSuccess","Mail Versandt erfolgreich.","Die Mail wurde erfolgreich an " + json.TO + " gesendet.");
                         } else {
-                            DialogMailComplete("#MailSendSuccess","+++ Fehler beim Mail Versandt +++","Die Mail konnte NICHT gesendet werden.");
+                            DialogMailComplete("#MailSendSuccess","+++ Fehler beim Mail Versandt +++","<font color=red>Die Mail konnte NICHT gesendet werden.</font>");
                         }
                     },
                     error: function (xhr, thrownError) {
@@ -735,6 +662,7 @@ function DialogMailComplete(id,title,message) {
             OK: function() {
                 $(this).dialog('close');
                 $('#SuccessDialog').remove();
+                location.reload();
             }
         }
     });

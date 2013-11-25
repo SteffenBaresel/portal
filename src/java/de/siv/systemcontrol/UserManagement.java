@@ -25,7 +25,8 @@ public class UserManagement extends HttpServlet {
             throws ServletException, IOException {
         String b64uid = Base64Coder.encodeString(request.getRemoteUser());
         HttpSession session = request.getSession();
-        PrintWriter out = response.getWriter(); 
+        PrintWriter out = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "*");
         response.setContentType("text/html; charset=utf-8");
@@ -84,7 +85,6 @@ public class UserManagement extends HttpServlet {
 "        </div>\n" +
 "        <div id='Configuration'></div>\n" +
 "        <div id='AddLink'></div>\n");
-        out.println(Html.printSidebars(null));
         out.println(Html.closeBodyCloseHtml(null));
     }
     

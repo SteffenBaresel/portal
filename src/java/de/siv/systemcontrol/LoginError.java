@@ -20,9 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginError extends HttpServlet {
     Properties props = null;
     
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response, String e)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter(); 
+        PrintWriter out = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "*");
         response.setContentType("text/html; charset=utf-8");
@@ -37,7 +38,14 @@ public class LoginError extends HttpServlet {
 "                });\n" +
 "            </script>\n");
         out.println(Html.closeHeadOpenBody(null));
-        out.println("<p class='title'><font class='kvasy'>kVASy&reg;</font> System Control</p><div id='logo-div'><img class='logo' src='layout/images/logo_backgroundblue_whitetext.png' title='SIV.AG'/></div>\n" +
+        
+        if ("2".equals(e)) {
+            out.println("<div id='login-error'>Der Anmeldeversuch schlug fehl! Ihr Zugang wurde gesperrt oder noch nicht aktiviert. Wenden Sie sich bitte an Ihren Portal Administrator.</div><p class='title'><font class='kvasy'>kVASy&reg;</font> System Control</p><div id='logo-div'><img class='logo' src='layout/images/logo_backgroundblue_whitetext.png' title='SIV.AG'/></div>\n");
+        } else {
+            out.println("<div id='login-error'>Der Anmeldeversuch schlug fehl! Bitte überprüfen Sie Benutzernamen und Kennwort. Wenden Sie sich bitte an Ihren LDAP/AD Administrator.</div><p class='title'><font class='kvasy'>kVASy&reg;</font> System Control</p><div id='logo-div'><img class='logo' src='layout/images/logo_backgroundblue_whitetext.png' title='SIV.AG'/></div>\n");
+        }
+        
+        out.println("" +
 "    <p class='subtitle'>Monitoring quite simple!</p>\n" +
 "    <div id='login-div'>\n" +
 "        <section>\n" +
@@ -45,12 +53,12 @@ public class LoginError extends HttpServlet {
 "                <div id='login-head'>Anmelden</div>\n" +
 "                <table cellpadding='0' cellspacing='5' border='0' id='login-table'>\n" +
 "                    <tr>\n" +
-"                        <td width='115' align='right' class='login-small'>Benutzername:</td>\n" +
-"                        <td><input type='text' name='j_username' class='login-input'/></td>\n" +
+"                        <td width='115' align='right' class='login-small-error'>Benutzername:</td>\n" +
+"                        <td><input type='text' name='j_username' class='login-input-error'/></td>\n" +
 "                    </tr>\n" +
 "                    <tr>\n" +
-"                        <td width='115' align='right' class='login-small'>Kennwort:</td>\n" +
-"                        <td><input type='password' name='j_password' class='login-input'/></td>\n" +
+"                        <td width='115' align='right' class='login-small-error'>Kennwort:</td>\n" +
+"                        <td><input type='password' name='j_password' class='login-input-error'/></td>\n" +
 "                    </tr>\n" +
 "                </table>\n" +
 "                <div id='login-footer'><input type='submit' value='Anmeldung' class='login-button'/></div>\n" +
@@ -71,12 +79,12 @@ public class LoginError extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response, request.getParameter("e"));
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response, request.getParameter("e"));
     }
 }
