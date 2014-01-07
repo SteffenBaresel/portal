@@ -15,6 +15,7 @@ import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 /**
@@ -97,6 +98,71 @@ public class Functions {
         Connection cn = ds.getConnection(); 
         PreparedStatement psD = cn.prepareStatement("UPDATE profiles_user SET ULAL=? WHERE usnm=?");
         psD.setLong(1,System.currentTimeMillis()/1000);
+        psD.setString(2,Base64Coder.encodeString( Uid ));
+        psD.executeUpdate(); 
+        /*
+         * Close Connection
+         */
+        cn.close();
+    }
+    
+    static public Boolean IsURL(HttpServletRequest request, String uri) throws FileNotFoundException, IOException, NamingException, SQLException {
+        if (props == null) {
+            props = Basics.getConfiguration();
+        }
+        String url = null;
+        Boolean value = false;
+        Context ctx = new InitialContext(); 
+        DataSource ds  = (DataSource) ctx.lookup("jdbc/repository"); 
+        Connection cn = ds.getConnection(); 
+        PreparedStatement ps = cn.prepareStatement("SELECT decode(val,'base64') from info_system where key = encode('PORTAL_PATH','base64')");
+        ResultSet rs = ps.executeQuery();
+        if ( rs.next() ) {
+            url = rs.getString( 1 );
+        }
+        /*
+         * Build Requested URL Path
+         */
+        url += uri;
+        if (request.getRequestURI().equals(url)) {
+            value = true;
+        }
+        /*
+         * Close Connection
+         */
+        cn.close();
+        /*
+         * Return 
+         */
+        return value;
+    }
+    
+    static public void UpdateUserIsLoggedIn(String Uid) throws FileNotFoundException, IOException, NamingException, SQLException {
+        if (props == null) {
+            props = Basics.getConfiguration();
+        }
+        Context ctx = new InitialContext(); 
+        DataSource ds  = (DataSource) ctx.lookup("jdbc/repository"); 
+        Connection cn = ds.getConnection(); 
+        PreparedStatement psD = cn.prepareStatement("UPDATE profiles_user SET UILI=? WHERE usnm=?");
+        psD.setBoolean(1,true);
+        psD.setString(2,Base64Coder.encodeString( Uid ));
+        psD.executeUpdate(); 
+        /*
+         * Close Connection
+         */
+        cn.close();
+    }
+    
+    static public void UpdateUserIsLoggedOut(String Uid) throws FileNotFoundException, IOException, NamingException, SQLException {
+        if (props == null) {
+            props = Basics.getConfiguration();
+        }
+        Context ctx = new InitialContext(); 
+        DataSource ds  = (DataSource) ctx.lookup("jdbc/repository"); 
+        Connection cn = ds.getConnection(); 
+        PreparedStatement psD = cn.prepareStatement("UPDATE profiles_user SET UILI=? WHERE usnm=?");
+        psD.setBoolean(1,false);
         psD.setString(2,Base64Coder.encodeString( Uid ));
         psD.executeUpdate(); 
         /*

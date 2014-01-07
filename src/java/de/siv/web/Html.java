@@ -47,6 +47,7 @@ public class Html {
         replace+="    <script type='text/javascript' src='script/jquery.selectmenu.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/timepicker.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/jquery.shortcuts.min.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/jquery-te-1.4.0.min.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCbasic.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCindex.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCbase64.js'></script>\n";
@@ -54,17 +55,47 @@ public class Html {
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCtaov.js'></script>\n";
         replace+="    <script type='text/javascript' src='script/kVASySystemControl/UserBasics.js'></script>\n";
         }
+        
+        if ("ManagedService".equals(mod)) {
+        replace+="    <script type='text/javascript' src='script/jquery.cookie.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/highcharts.js'></script>\n";
+	replace+="    <script type='text/javascript' src='script/exporting.js'></script>\n";
+	replace+="    <script type='text/javascript' src='script/data.js'></script>\n";
+	replace+="    <script type='text/javascript' src='script/jquery.searchFilter.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/jquery.selectmenu.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/timepicker.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/jquery.shortcuts.min.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/jquery-te-1.4.0.min.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/jquery.simplePagination.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCbasic.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCindex.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCbase64.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCliveticker.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/kSCtaov.js'></script>\n";
+        replace+="    <script type='text/javascript' src='script/kVASySystemControl/ManagedServiceBasics.js'></script>\n";
+        }
+        
         return replace;
     }
     
     static public String includeCss(String mod) {
         String replace = "    <link rel='stylesheet' href='layout/kSCbasic.css' />\n";
+        if ("ManagedService".equals(mod)) {
+        replace+="    <link rel='stylesheet' href='layout/kVASySystemControl/ManagedServiceBasics.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/kSCliveticker.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/kSCsidebar.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/kSCtaov.css' />\n";
+	replace+="    <link rel='stylesheet' href='layout/searchFilter.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/jquery-te-1.4.0.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/simplePagination.css' />\n";
+        }
         if ("Index".equals(mod)) {
         replace+="    <link rel='stylesheet' href='layout/kVASySystemControl/UserBasics.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCliveticker.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCsidebar.css' />\n";
         replace+="    <link rel='stylesheet' href='layout/kSCtaov.css' />\n";
 	replace+="    <link rel='stylesheet' href='layout/searchFilter.css' />\n";
+        replace+="    <link rel='stylesheet' href='layout/jquery-te-1.4.0.css' />\n";
         }
         replace+="    <!-- Personal Computer -> 1024x768 -->\n";
         replace+="    <link rel='stylesheet' media='screen and (max-width: 1214px)' href='layout/metro.1024.css' />\n";
@@ -81,14 +112,17 @@ public class Html {
         return replace;
     }
     
-    static public String printTopMenu(String mod) {
+    static public String printTopMenu(String mod, String uid) {
         String replace = "        <div id='TopMenu'></div>\n";
         replace+="        <span id='top'>\n";
         replace+="            <p class='title'><font class='kvasy'>kVASy&reg;</font> System Control</p><div id='logo-div'><img class='logo' src='layout/images/logo_backgroundblue_whitetext.png' title='SIV.AG'/></div>\n";
         replace+="            <p class='subtitle'>Monitoring quite simple!</p>";
         replace+="        </span>\n";
         replace+="        <div id='UserMenu'><table cellpadding=0 cellspacing=0 border=0><tr><td><span class='UserDesc' style='float: left;'>User</span><span style='float: left; margin-top: -1px;' class='ui-icon ui-icon-triangle-1-s'></span></td><td width='10'></td><td colspan=3><span class='UserDesc' style='float: left;'>Session</span><span style='float: left; margin-top: -1px;' class='ui-icon ui-icon-triangle-1-s'></span></td></tr><tr valign=middle><td><p class='login_username'></p></td><td width='10'></td><td><p class='login_shortname'><a href='logout'>Abmelden</a><p></td></tr></table><div id='Liveticker'></div></div>\n";
-        replace+="        <div id='UserPicture'><img id='UserPictureP' src='layout/images/DefaultProfile.png' /></div>\n";
+        if ("mod".equals(mod)) {
+        replace+="        <div id='UserView'><table cellpadding=0 cellspacing=0 border=0><tr><td><span class='UserDesc' style='float: left;'>View</span><span style='float: left; margin-top: -1px;' class='ui-icon ui-icon-triangle-1-s'></span></td></tr><tr><td><span class='UserReload' onclick=\"Reload('" + uid + "');\">Reload</span></td></tr></table></div>";
+        replace+="        <div id='back-div'></div>\n";
+        }
         return replace;
     }
     

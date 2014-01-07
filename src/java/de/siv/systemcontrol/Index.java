@@ -31,6 +31,7 @@ public class Index extends HttpServlet {
         try {
             if (Functions.UserExist(Uid)) {
                 Functions.UpdateLastLogin(Uid);
+                Functions.UpdateUserIsLoggedIn(Uid);
                 PrintWriter out = response.getWriter();
                 response.setCharacterEncoding("UTF-8");
                 response.addHeader("Access-Control-Allow-Origin", "*");
@@ -56,7 +57,7 @@ public class Index extends HttpServlet {
     "                });\n" +
     "            </script>\n");
                 out.println(Html.closeHeadOpenBody(null));
-                out.println(Html.printTopMenu(null));
+                out.println(Html.printTopMenu(null,null));
                 out.println("        <div id='center'>\n" +
     "            <section>\n");
                 
@@ -97,7 +98,19 @@ public class Index extends HttpServlet {
     "                </a>\n");
                 
                         }
-                         
+                        
+                        if(Functions.UserIsPermitted(Uid,"managed_services")) {
+                
+                out.println("" +
+    "                <a href='ManagedServices' class='twitter'>\n" +
+    "                    <span>Managed Services</span><br></br>\n" +
+    "                    <span class='sub-grid'>Servicearbeiten, Kundeninformationen und Vertragstypen.</span>\n" +
+    "                </a>\n");
+                
+                        }
+                
+                out.println("<div id='DashboardLinks'></div>");
+                        
                         if(Functions.UserIsPermitted(Uid,"addlink")) {
                 
                 out.println("" +

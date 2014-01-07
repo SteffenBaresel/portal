@@ -32,9 +32,24 @@ public class UserBasics extends HttpServlet {
         response.addHeader("Access-Control-Allow-Methods", "*");
         response.setContentType("text/css; charset=utf-8");
         
+        if(Functions.UserIsPermitted(Uid,"config_web")) {
+            
+            out.println("" +
+                "#MailCC,#MailEsk1,#MailEsk2,#MailEsk3 { padding: 2px; }" +
+                "#MailCC input,#MailEsk1 input,#MailEsk2 input,#MailEsk3 input { border: 1px solid #82abcc; background-color: #004c8a; color: #ffffff; width: 400px; padding: 5px; height: 21px; }" +
+                "#MailCC span,#MailEsk1 span,#MailEsk2 span,#MailEsk3 span { margin-left: 33px; margin-right: 25px; }" +
+                "#MailCC button,#MailEsk1 button,#MailEsk2 button,#MailEsk3 button { position: absolute; margin-left: 5px; }" +
+                "#MailSG div.jqte { height: 125px; }" +
+                "#MailSG .jqte_editor,#MailSG .jqte_source { height: 76px; }" +
+            "");
+            
+        }
+        
+        // Index Page
+        
         if(Functions.UserIsPermitted(Uid,"profile")) {
         
-        out.println("" +
+            out.println("" +
                 "#UserProfileImg { position: absolute; margin-top: 5px; margin-left: 5px; }" +
                 "#UserProfileImg img { width: 150px;  height: 150px; }" +
                 "#UserProfileUid { position: absolute; left: 200px; top: 35px; width: 350px; }" +
@@ -47,13 +62,13 @@ public class UserBasics extends HttpServlet {
                 "#UserProfileDialog input { border: 1px solid #82abcc; background-color: #004c8a; color: #ffffff; width: 265px; padding: 5px; float: right; }" +
                 "#UserProfileDialog span { padding: 8px; float: left; font-size: 12px; font-weight: bold; }" +
                 "#UserProfileImgHover { display: none; position: absolute; width: 130px; padding: 10px; background-color: #82abcc; margin-left: 5px; top: 118px; cursor: pointer; text-align: center; font-weight: bold; color: #004279; }" +
-        "");
+            "");
         
         }
         
         if(Functions.UserIsPermitted(Uid,"config_usermanagement")) {
         
-        out.println("" +
+            out.println("" +
                 "#UserMgmntUserList,#UserMgmntGroupList,#UserMgmntPrivList,#UserMgmntRoleList { margin-top: -297px; margin-left: 300px; width: 792px; height: 295px; border: 1px solid #82abcc; overflow-y: scroll; background-color: #004279; }" +
                 "#UserMgmntUserMenu,#UserMgmntGroupMenu,#UserMgmntPrivMenu,#UserMgmntRoleMenu { width: 285px; height: 295px; }" +
                 "#UserMgmntUsGrList,#UserMgmntGrRoList,#UserMgmntRoPrList { width: 1092px; height: 175px; border: 1px solid #82abcc; overflow-y: scroll; }" +
@@ -86,7 +101,7 @@ public class UserBasics extends HttpServlet {
                 "#UserMgmntRoPrList1 table th { padding: 5px; color: #fff; border-bottom: 1px solid #82abcc; background-color: #004279; }" +
                 "#UserMgmntRoPrList2 table th { min-width: 125px; padding: 5px; color: #fff; border-bottom: 1px solid #82abcc; border-right: 1px solid #82abcc; background-color: #004279; }" +
                 "#UserMgmntRoPrList2 { float: right; width: 700px; font-size: 14px; font-weight: bold; overflow-x: auto; }" +
-                "#UserMgmntGrRoList1 { float: left; width: 174px; border-right: 1px solid #82abcc; font-size: 14px; font-weight: bold; }" +
+                "#UserMgmntGrRoList1 { float: left; width: 194px; border-right: 1px solid #82abcc; font-size: 14px; font-weight: bold; }" +
                 "#UserMgmntGrRoList1 table { table-layout: fixed; border-spacing: 0; border-collapse: collapse; width: 100%; cursor: default; }" +
                 "#UserMgmntGrRoList2 table { table-layout: fixed; border-spacing: 0; border-collapse: collapse; cursor: default; }" +
                 "#UserMgmntGrRoList1 table td { padding: 5px; border-bottom: 1px solid #82abcc; }" +
@@ -95,7 +110,7 @@ public class UserBasics extends HttpServlet {
                 "#UserMgmntGrRoList1 table tr:first-child,#UserMgmntGrRoList2 table tr:first-child { height: 20px; font-size: 12px; }" +
                 "#UserMgmntGrRoList1 table th { padding: 5px; color: #fff; border-bottom: 1px solid #82abcc; background-color: #004279; }" +
                 "#UserMgmntGrRoList2 table th { min-width: 125px; padding: 5px; color: #fff; border-bottom: 1px solid #82abcc; border-right: 1px solid #82abcc; background-color: #004279; }" +
-                "#UserMgmntGrRoList2 { float: right; width: 900px; font-size: 14px; font-weight: bold; overflow-x: auto; }" +
+                "#UserMgmntGrRoList2 { float: right; width: 880px; font-size: 14px; font-weight: bold; overflow-x: auto; }" +
                 "#UserMgmntUsGrList1 { float: left; width: 174px; border-right: 1px solid #82abcc; font-size: 14px; font-weight: bold; }" +
                 "#UserMgmntUsGrList1 table { table-layout: fixed; border-spacing: 0; border-collapse: collapse; width: 100%; cursor: default; }" +
                 "#UserMgmntUsGrList2 table { table-layout: fixed; border-spacing: 0; border-collapse: collapse; cursor: default; }" +
@@ -108,10 +123,23 @@ public class UserBasics extends HttpServlet {
                 "#UserMgmntUsGrList2 { float: right; width: 900px; font-size: 14px; font-weight: bold; overflow-x: auto; }" +
                 "#UserMgmntUsGrList2 img,#UserMgmntRoPrList2 img,#UserMgmntGrRoList2 img { cursor: pointer; }" +
                 "#UserMgmntUsGrList,#UserMgmntRoPrList,#UserMgmntGrRoList { background-color: #004279; }" +
-        "");
+            "");
             
         }
-
+        
+        if(Functions.UserIsPermitted(Uid,"config_mail")) {
+            
+            out.println("" +
+                "#MailHContent {  }" +
+                "#MailFContent {  }" +
+                "#MailH div.jqte { height: 175px; }" +
+                "#MailH .jqte_editor,#MailH .jqte_source { height: 126px; }" +
+                "#MailF div.jqte { height: 325px; }" +
+                "#MailF .jqte_editor,#MailF .jqte_source { height: 276px; }" +
+            "");
+            
+        }
+        
     }
     
     @Override

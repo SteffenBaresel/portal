@@ -36,6 +36,7 @@ public class UserBasics extends HttpServlet {
 "function ClearValue(id) {\n" +
 "    document.getElementById(id).value = \"\";\n" +
 "}\n");
+
         
         // User Profile Dialog
         
@@ -158,6 +159,10 @@ public class UserBasics extends HttpServlet {
                 out.println("                <li><a href=\"#ConfigurationTabs3\">Rechteverwaltung</a></li>\\n\\");
                 out.println("                <li><a href=\"#ConfigurationTabs4\">Berechtigungen</a></li>\\n\\");
             }
+            
+            if(Functions.UserIsPermitted(Uid,"config_mail")) {
+                out.println("                <li><a href=\"#ConfigurationTabs5\">Mail-Format</a></li>\\n\\");
+            }
         
             out.println("            </ul>\\n\\");
             
@@ -165,17 +170,27 @@ public class UserBasics extends HttpServlet {
             
             out.println("            <div id=\"ConfigurationTabs1\">" +
 "                <div id=\"ConfigurationSection\">" +
-"                    <div id=\"ConfigurationSectionTitle\">Dashboard</div>" +
-"                    <button id=\"1\" class=\"ConfigurationSectionPoint\" onclick=\"LoadBasic(\\'' + b64uid + 'Ljd84K\\');\">Setze Basis Einstellungen</button>" +
-"                    <button id=\"2\" class=\"ConfigurationSectionPoint\" onclick=\"DeleteBasic(\\'' + b64uid + 'Ljd84K\\');\">Zur&uuml;cksetzen auf Standard</button>" +
+"                    <div id=\"ConfigurationSectionTitle\">Reset</div>" +
+"                    <button id=\"2\" class=\"ConfigurationSectionPoint\" onclick=\"DeleteBasic(\\'' + b64uid + 'Ljd84K\\');\">Dashboard Zur&uuml;cksetzen</button>" +
+"                    <button id=\"3\" class=\"ConfigurationSectionPoint\" onclick=\"DeleteBasicConfig(\\'' + b64uid + 'Ljd84K\\');\">Alle Einstellungen zur&uuml;cksetzen</button>" +
 "                </div>" +
 "                <div id=\"ConfigurationSection\">" +
-"                    <div id=\"ConfigurationSectionTitle\">Einstellungen</div>" +
+"                    <div id=\"ConfigurationSectionTitle\">Anzeige Einstellungen</div>" +
 "                    <div class=\"Config\"></div>" +
 "                </div>" +
 "                <div id=\"ConfigurationSection\">" +
-"                    <div id=\"ConfigurationSectionTitle\">Reset</div>" +
-"                    <button id=\"3\" class=\"ConfigurationSectionPoint\" onclick=\"DeleteBasicConfig(\\'' + b64uid + 'Ljd84K\\');\">Alle Einstellungen zur&uuml;cksetzen</button>" +
+"                    <div id=\"ConfigurationSectionTitle\">Mailing, Standard CC Empf&auml;nger</div>" +
+"                    <div id=\"MailCC\"><span>Mailadressen CC: (Mail1,Mail2,Mailn)</span><input type=text id=\"InMailCC\"/><button onclick=\"AddMailingConfig(\\'InMailCC\\',\\'CC\\');\">Festlegen</button></div>" +
+"                </div>" +
+"                <div id=\"ConfigurationSection\">" +
+"                    <div id=\"ConfigurationSectionTitle\">Mailing, Eskalationsmanagement</div>" +
+"                    <div id=\"MailEsk1\"><span>Mailadressen Eskalationsstufe 1: (Mail1,Mail2,Mailn)</span><input type=text id=\"InMailEsk1\"/><button onclick=\"AddMailingConfig(\\'InMailEsk1\\',\\'ESK1\\');\">Festlegen</button></div>" +
+"                    <div id=\"MailEsk2\"><span>Mailadressen Eskalationsstufe 2: (Mail1,Mail2,Mailn)</span><input type=text id=\"InMailEsk2\"/><button onclick=\"AddMailingConfig(\\'InMailEsk2\\',\\'ESK2\\');\">Festlegen</button></div>" +
+"                    <div id=\"MailEsk3\"><span>Mailadressen Eskalationsstufe 3: (Mail1,Mail2,Mailn)</span><input type=text id=\"InMailEsk3\"/><button onclick=\"AddMailingConfig(\\'InMailEsk3\\',\\'ESK3\\');\">Festlegen</button></div>" +
+"                </div>" +
+"                <div id=\"ConfigurationSection\">" +
+"                    <div id=\"ConfigurationSectionTitle\">Mailing, Signatur</div>" +
+"                    <div id=\"MailSG\"><div id=\"MailSGContent\"></div><button onclick=\"AddMailingSignature(\\'MailSG\\',\\'SIGN\\');\">Festlegen</button></div>" +
 "                </div>" +
 "            </div>\\n\\");
             
@@ -226,17 +241,41 @@ public class UserBasics extends HttpServlet {
             
             }
             
+            if(Functions.UserIsPermitted(Uid,"config_mail")) {
+
+            out.println("            <div id=\"ConfigurationTabs5\">" +
+"                <div id=\"ConfigurationSection\">" +
+"                    <div id=\"ConfigurationSectionTitle\">Mail-Header</div>" +
+"                    <div id=\"MailH\"><div id=\"MailHContent\"></div><button onclick=\"AddMailConfig(\\'MailH\\',\\'HEADER\\');\">Festlegen</button></div>" +
+"                </div>" +
+"                <div id=\"ConfigurationSection\">" +
+"                    <div id=\"ConfigurationSectionTitle\">Mail-Footer</div>" +
+"                    <div id=\"MailF\"><div id=\"MailFContent\"></div><button onclick=\"AddMailConfig(\\'MailF\\',\\'FOOTER\\');\">Festlegen</button></div>" +
+"                </div>" +
+"            </div>\\n\\");
+                
+            }
+            
             out.println("       </div>" +
 "   </div>');\n" +
 "    \n" +
 "    $('#ConfigurationTabs').tabs();\n" +
-"    $('#1').button();\n" +
 "    $('#2').button();\n" +
 "    $('#3').button();\n" +
 "    $('#UserMgmntUserAdd').button();\n" +
 "    $('#UserMgmntGroupAdd').button();\n" +
 "    $('#UserMgmntRoleAdd').button();\n" +
 "    $('#UserMgmntPrivAdd').button();\n" +
+"    $('#MailCC button').button();\n" +
+"    $('#MailEsk1 button').button();\n" +
+"    $('#MailEsk2 button').button();\n" +
+"    $('#MailEsk3 button').button();\n" +
+"    $('#MailSG button').button();\n" +
+"    $('#MailH button').button();\n" +
+"    $('#MailF button').button();\n" +
+"    $('#MailSGContent').jqte();\n" +
+"    $('#MailHContent').jqte();\n" +
+"    $('#MailFContent').jqte();\n" +
 "\n" +
 "    /* Dialog open */\n" +
 "    $('#ConfigurationDialog').dialog({\n" +
@@ -274,7 +313,39 @@ public class UserBasics extends HttpServlet {
 "            FillUserManagementGrRo();\n");
         
             }
+            
+            if(Functions.UserIsPermitted(Uid,"config_web")) {
+                
+                out.println("" +
+"             for (var key in Mailing) {\n" +
+"                 var obj = Mailing[key];\n" +
+"                 for (var prop in obj) {" +
+"                     if(obj.hasOwnProperty(prop)) {\n" +
+"                         if (prop == 'CC') {\n" +
+"                             $('#InMailCC').val($.base64.decode( obj[prop] ));\n" +
+"                         } else if (prop == 'ESK1') {\n" +
+"                             $('#InMailEsk1').val($.base64.decode( obj[prop] ));\n" +
+"                         } else if (prop == 'ESK2') {\n" +
+"                             $('#InMailEsk2').val($.base64.decode( obj[prop] ));\n" +
+"                         } else if (prop == 'ESK3') {\n" +
+"                             $('#InMailEsk3').val($.base64.decode( obj[prop] ));\n" +
+"                         } else if (prop == 'SIGN') {\n" +
+"                             //$('#MailSGContent').val($.base64.decode( obj[prop] ));\n" +
+"                             $('#MailSG div.jqte_editor').html($.base64.decode( obj[prop] ));\n" +
+"                         }\n" +
+"                     }\n" +
+"                 }" +
+"             }\n");
+            
+            }
+
+            if(Functions.UserIsPermitted(Uid,"config_mail")) {
+
+                out.println("" +
+"            GetMailConfig();\n");
         
+            }
+            
             out.println("        },\n" +
 "        buttons: { \n" +
 "            BEENDEN: function() {\n" +
@@ -285,6 +356,48 @@ public class UserBasics extends HttpServlet {
 "	}\n" +
 "    }).parent().find('.ui-dialog-titlebar-close').hide();\n" +
 "}");
+            
+            
+            if(Functions.UserIsPermitted(Uid,"config_web")) {
+                
+                out.println("\n" +
+"function AddMailingConfig(id,key) {\n" +
+"    $.ajax({\n" +
+"        url: '/gateway/exec/AddMailingConfig?uuid=' + $.base64.encode( UUID ) + '&key=' + $.base64.encode( key ) + '&val=' + $.base64.encode( $('#' + id).val() ),\n" +
+"        crossDomain: true,\n" +
+"        success: function(json) {\n" +
+"            if (json.ADD == \"1\") {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"Mailing Konfiguration hinzugef&uuml;gt\",\"Mailing Konfiguration wurde erfolgreich hinzugef&uuml;gt.\");\n" +
+"            } else {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"+++ Fehler beim hinzuf&uuml;gen der Mailing Konfiguration +++\",\"<font color=red>Die Mailing Konfiguration konnte NICHT hinzugef&uuml;gt werden.</font>\");\n" +
+"            }\n" +
+"        },\n" +
+"        dataType: 'json',\n" +
+"        cache: false\n" +
+"    });\n" +
+"}\n" +
+                "\n");
+
+                out.println("\n" +
+"function AddMailingSignature(id,key) {\n" +
+"    var val = $.base64.encode( $('#' + id + ' div.jqte_editor').html() ).replace(/\\+/g,'78');\n" +
+"    $.ajax({\n" +
+"        url: '/gateway/exec/AddMailingConfig?uuid=' + $.base64.encode( UUID ) + '&key=' + $.base64.encode( key ) + '&val=' + val,\n" +
+"        crossDomain: true,\n" +
+"        success: function(json) {\n" +
+"            if (json.ADD == \"1\") {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"Mailing Konfiguration hinzugef&uuml;gt\",\"Mailing Konfiguration wurde erfolgreich hinzugef&uuml;gt.\");\n" +
+"            } else {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"+++ Fehler beim hinzuf&uuml;gen der Mailing Konfiguration +++\",\"<font color=red>Die Mailing Konfiguration konnte NICHT hinzugef&uuml;gt werden.</font>\");\n" +
+"            }\n" +
+"        },\n" +
+"        dataType: 'json',\n" +
+"        cache: false\n" +
+"    });\n" +
+"}\n" +
+                "\n");                
+                
+            }
             
             if(Functions.UserIsPermitted(Uid,"config_usermanagement")) {
             
@@ -397,7 +510,7 @@ public class UserBasics extends HttpServlet {
 "        crossDomain: true,\n" +
 "        success: function(json) {\n" +
 "            var c=0;" +
-"            $('#UserMgmntUsGrList1 table').html('<tr id=\"tuhd\"><th>User:</th></tr>');\n" +
+"            $('#UserMgmntUsGrList1 table').html('<tr id=\"tuhd\"><th>Gruppe:</th></tr>');\n" +
 "            $('#UserMgmntUsGrList2 table').html('<tr id=\"tuhd\"></tr>');\n" +
 "            $.each(json.GROUP, function() {\n" +
 "                var GRID = this.GRID;\n" +
@@ -528,10 +641,46 @@ public class UserBasics extends HttpServlet {
             
             }
             
+            
+            if(Functions.UserIsPermitted(Uid,"config_mail")) {
+
+            out.println("\n" +
+"function GetMailConfig() {\n" +
+"    $.ajax({\n" +
+"        url: '/gateway/exec/GetMailConfig',\n" +
+"        crossDomain: true,\n" +
+"        success: function(json) {\n" +
+"            $('#MailH div.jqte_editor').html($.base64.decode( json.HEADER )); \n" +
+"            $('#MailF div.jqte_editor').html($.base64.decode( json.FOOTER )); \n" +
+"        },\n" +
+"        dataType: 'json',\n" +
+"        cache: false\n" +
+"    });\n" +
+"}\n" +
+            "\n");                
+                
+            out.println("\n" +
+"function AddMailConfig(id,key) {\n" +
+"    var val = $.base64.encode( $('#' + id + ' div.jqte_editor').html() ).replace(/\\+/g,'78');\n" +
+"    $.ajax({\n" +
+"        url: '/gateway/exec/AddMailConfig?key=' + $.base64.encode( key ) + '&val=' + val,\n" +
+"        crossDomain: true,\n" +
+"        success: function(json) {\n" +
+"            if (json.ADD == \"1\") {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"Mail Konfiguration hinzugef&uuml;gt\",\"Mail Konfiguration wurde erfolgreich hinzugef&uuml;gt.\");\n" +
+"            } else {\n" +
+"                DialogMailComplete(\"#UserProfileSuccess\",\"+++ Fehler beim hinzuf&uuml;gen der Mail Konfiguration +++\",\"<font color=red>Die Mail Konfiguration konnte NICHT hinzugef&uuml;gt werden.</font>\");\n" +
+"            }\n" +
+"        },\n" +
+"        dataType: 'json',\n" +
+"        cache: false\n" +
+"    });\n" +
+"}\n" +
+            "\n");
+            
+            }
+            
         }
-        
-        
-        
     }
     
     @Override

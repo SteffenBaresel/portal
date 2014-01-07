@@ -96,7 +96,7 @@
         <servlet-name>LoginError</servlet-name>
         <url-pattern>/loginError</url-pattern>
     </servlet-mapping>
-        <servlet>
+    <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>de.siv.systemcontrol.Logout</servlet-class>
     </servlet>
@@ -105,12 +105,12 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserManagement</servlet-name>
-        <servlet-class>de.siv.systemcontrol.UserManagement</servlet-class>
+        <servlet-name>ManagedServices</servlet-name>
+        <servlet-class>de.siv.systemcontrol.ManagedServices</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserManagement</servlet-name>
-        <url-pattern>/UserManagement</url-pattern>
+        <servlet-name>ManagedServices</servlet-name>
+        <url-pattern>/ManagedServices</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>UserBasicsScript</servlet-name>
@@ -127,5 +127,21 @@
     <servlet-mapping>
         <servlet-name>UserBasicsStyle</servlet-name>
         <url-pattern>/layout/kVASySystemControl/UserBasics.css</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ManagedServiceBasicScript</servlet-name>
+        <servlet-class>de.siv.script.ManagedServiceBasics</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagedServiceBasicScript</servlet-name>
+        <url-pattern>/script/kVASySystemControl/ManagedServiceBasics.js</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ManagedServiceBasicStyle</servlet-name>
+        <servlet-class>de.siv.style.ManagedServiceBasics</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagedServiceBasicStyle</servlet-name>
+        <url-pattern>/layout/kVASySystemControl/ManagedServiceBasics.css</url-pattern>
     </servlet-mapping>
 </web-app>
